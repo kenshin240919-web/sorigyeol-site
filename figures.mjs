@@ -37,7 +37,7 @@ const A = f => 20 * Math.log10(ra(f)) + 2.0, Cw = f => 20 * Math.log10(rc(f)) + 
 const fTicks = [[20], [50], [100], [200], [500], [1000, '1k'], [2000, '2k'], [5000, '5k'], [10000, '10k'], [20000, '20k']];
 
 export const figures = {
-  'decibel-basics': [{src: '/images/calc-sum-60-60.png', file: 'calc-sum-60-60.png', h: 846, after: 2, alt: '소리결 데시벨 계산기에 60dB와 60dB를 넣자 합친 크기 63dB가 나온 화면', caption: '소리결 데시벨 계산기에 60dB 두 개를 넣고 직접 캡처한 화면이에요. 합친 크기는 120dB가 아니라 63dB로 나와요.'}, {
+  'decibel-basics': [{src: '/images/calc-sum-60-60.png', file: 'calc-sum-60-60.png', h: 846, after: 2, alt: '근처소리 데시벨 계산기에 60dB와 60dB를 넣자 합친 크기 63dB가 나온 화면', caption: '근처소리 데시벨 계산기에 60dB 두 개를 넣고 직접 캡처한 화면이에요. 합친 크기는 120dB가 아니라 63dB로 나와요.'}, {
     file: 'db-sum.svg', after: 3,
     alt: '두 소리의 데시벨 차이가 0일 때 3dB, 10dB일 때 약 0.4dB만 더해진다는 것을 보여 주는 그래프',
     caption: '큰 소리에 작은 소리를 더하면 몇 dB가 늘어날까요. 10·log10(10^(L1/10)+10^(L2/10)) 식으로 직접 계산해 그렸어요. 두 소리가 같으면 3dB, 10dB 넘게 차이 나면 0.4dB 아래로 거의 늘지 않아요.',
@@ -60,7 +60,7 @@ export const figures = {
     svg: chart({title: '한 옥타브 차이: 220Hz와 440Hz', x: [0, 10], y: [-1.3, 1.3], xTicks: range(0, 10, 1).map(v => [v]), yTicks: [-1, 0, 1], xLabel: '시간 (ms)', yLabel: '공기 압력 변화 (상대값)',
       series: [{label: '220Hz', color: C.navy, pts: range(0, 10, 0.02).map(t => [t, Math.sin(2 * Math.PI * 220 * t / 1000)])}, {label: '440Hz (한 옥타브 위)', color: C.amber, pts: range(0, 10, 0.02).map(t => [t, 0.75 * Math.sin(2 * Math.PI * 440 * t / 1000)])}]})
   }],
-  'sound-distance': [{src: '/images/calc-dist-80-1-8.png', file: 'calc-dist-80-1-8.png', h: 1106, after: 1, alt: '소리결 데시벨 계산기에 1m에서 80dB, 새 거리 8m를 넣자 약 61.9dB가 나온 화면', caption: '1m에서 80dB인 소리를 8m에서 들으면 어떨까요. 소리결 계산기에 넣고 직접 캡처한 화면이에요. 거리가 두 배씩 세 번 늘어 약 18dB 줄어든 61.9dB로 나와요(점음원, 반사 없는 바깥 기준).'}, {
+  'sound-distance': [{src: '/images/calc-dist-80-1-8.png', file: 'calc-dist-80-1-8.png', h: 1106, after: 1, alt: '근처소리 데시벨 계산기에 1m에서 80dB, 새 거리 8m를 넣자 약 61.9dB가 나온 화면', caption: '1m에서 80dB인 소리를 8m에서 들으면 어떨까요. 근처소리 계산기에 넣고 직접 캡처한 화면이에요. 거리가 두 배씩 세 번 늘어 약 18dB 줄어든 61.9dB로 나와요(점음원, 반사 없는 바깥 기준).'}, {
     file: 'distance-decay.svg', after: 2,
     alt: '1m에서 80dB인 점음원과 선음원이 거리에 따라 줄어드는 그래프. 점음원은 거리 두 배마다 6dB, 선음원은 3dB 줄어든다',
     caption: '1m에서 80dB라고 가정하고 계산한 예시예요. 점음원은 20·log10(거리비), 선음원은 10·log10(거리비)만큼 줄여 그렸어요. 반사가 없는 이상적인 바깥 공간 기준이라 실제 측정값과는 다를 수 있어요.',
@@ -96,7 +96,7 @@ export const figures = {
       series: [{label: '성인 (80dB · 주 40시간)', color: C.navy, pts: range(75, 120, 0.5).map(L => [L, 40 / 2 ** ((L - 80) / 3)]).filter(p => p[1] <= 64)}, {label: '어린이·민감한 사람 (75dB)', color: C.amber, dash: true, pts: range(75, 120, 0.5).map(L => [L, 40 / 2 ** ((L - 75) / 3)]).filter(p => p[1] >= 1 / 360)}],
       notes: [[80, 40, '80dB: 40시간'], [90, 4, '90dB: 4시간'], [100, 1 / 3, '100dB: 20분'], [110, 1 / 24, '110dB: 2분 30초']]})
   }],
-  'noise-exposure-time': [{src: '/images/calc-time-94.png', file: 'calc-time-94.png', h: 750, after: 2, alt: '소리결 데시벨 계산기에 94dBA를 넣자 하루 권고 노출 시간 약 1시간이 나온 화면', caption: '소리결 계산기에 94dBA를 넣고 직접 캡처한 화면이에요. NIOSH 권고(85dBA 8시간, 3dB 교환율)로 계산하면 85dBA보다 9dB 높으니 8시간을 세 번 절반으로 나눈 1시간이 나와요.'}, {
+  'noise-exposure-time': [{src: '/images/calc-time-94.png', file: 'calc-time-94.png', h: 750, after: 2, alt: '근처소리 데시벨 계산기에 94dBA를 넣자 하루 권고 노출 시간 약 1시간이 나온 화면', caption: '근처소리 계산기에 94dBA를 넣고 직접 캡처한 화면이에요. NIOSH 권고(85dBA 8시간, 3dB 교환율)로 계산하면 85dBA보다 9dB 높으니 8시간을 세 번 절반으로 나눈 1시간이 나와요.'}, {
     file: 'niosh-osha-time.svg', after: 3,
     alt: '소음 크기별 하루 허용 시간을 NIOSH 권고와 OSHA 기준으로 비교한 그래프. 100dBA에서 NIOSH는 15분, OSHA는 2시간이다',
     caption: 'NIOSH 권고(85dBA 8시간, 3dB마다 절반)와 OSHA 기준(90dBA 8시간, 5dB마다 절반)을 각 기준식으로 계산해 그렸어요. 같은 100dBA라도 NIOSH는 15분, OSHA는 2시간이라 8배 차이가 나요. 세로축은 로그 눈금이에요.',
