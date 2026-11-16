@@ -36,7 +36,25 @@ const rc = f => (12194 ** 2 * f * f) / ((f * f + 20.6 ** 2) * (f * f + 12194 ** 
 const A = f => 20 * Math.log10(ra(f)) + 2.0, Cw = f => 20 * Math.log10(rc(f)) + 0.06;
 const fTicks = [[20], [50], [100], [200], [500], [1000, '1k'], [2000, '2k'], [5000, '5k'], [10000, '10k'], [20000, '20k']];
 
+// 오디오그램 틀에 난청 정도 구간을 칠한 그림 (세로축 위가 작은 소리)
+function audioBands({w = 720, h = 460, title, bands, box}) {
+  const L = 64, R = 150, T = 50, B = 50, pw = w - L - R, ph = h - T - B, f0 = 125, f1 = 8000, d0 = -10, d1 = 120;
+  const tx = f => L + Math.log2(f / f0) / Math.log2(f1 / f0) * pw, ty = d => T + (d - d0) / (d1 - d0) * ph;
+  const cols = ['#e3f1ee', '#f3f0e2', '#f6e8d2', '#f3dcc0', '#efcfb0', '#e9c0a3', '#e2b096'];
+  const fills = bands.map(([a, b, t], i) => `<rect x="${L}" y="${n(ty(a))}" width="${pw}" height="${n(ty(b) - ty(a))}" fill="${cols[i]}"/><text x="${L + pw + 8}" y="${n((ty(a) + ty(b)) / 2) + 4}" font-size="12.5" fill="${C.ink}">${t}</text>`).join('');
+  const fx = [125, 250, 500, 1000, 2000, 4000, 8000].map(f => `<line x1="${n(tx(f))}" x2="${n(tx(f))}" y1="${T}" y2="${T + ph}" stroke="#c9ced8"/><text x="${n(tx(f))}" y="${T - 8}" text-anchor="middle" font-size="12" fill="${C.muted}">${f >= 1000 ? f / 1000 + 'k' : f}</text>`).join('');
+  const dy = range(-10, 120, 10).map(d => `<line x1="${L}" x2="${L + pw}" y1="${n(ty(d))}" y2="${n(ty(d))}" stroke="#d6dae2" stroke-width="0.7"/><text x="${L - 8}" y="${n(ty(d)) + 4}" text-anchor="end" font-size="12" fill="${C.muted}">${d}</text>`).join('');
+  const bx = box ? `<rect x="${n(tx(box[0]))}" y="${n(ty(box[2]))}" width="${n(tx(box[1]) - tx(box[0]))}" height="${n(ty(box[3]) - ty(box[2]))}" fill="none" stroke="${C.navy}" stroke-width="2" stroke-dasharray="7 6"/><text x="${n(tx(box[0])) + 6}" y="${n(ty(box[3])) - 6}" font-size="12.5" fill="${C.navy}">${box[4]}</text>` : '';
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" ${F}><rect width="${w}" height="${h}" fill="${C.bg}"/><text x="${L}" y="24" font-size="16" font-weight="700" fill="${C.ink}">${title}</text>${fills}${dy}${fx}<rect x="${L}" y="${T}" width="${pw}" height="${ph}" fill="none" stroke="#9aa1b0"/>${bx}<text x="${L + pw / 2}" y="${h - 14}" text-anchor="middle" font-size="13" fill="${C.ink}">주파수 (Hz) · 왼쪽 낮은 음, 오른쪽 높은 음</text><text transform="translate(16,${T + ph / 2}) rotate(-90)" text-anchor="middle" font-size="13" fill="${C.ink}">청력 레벨 (dB HL) · 아래로 갈수록 큰 소리</text></svg>`;
+}
+
 export const figures = {
+  'audiogram-reading': [{
+    file: 'audiogram-degrees.svg', after: 3,
+    alt: '125Hz부터 8000Hz까지의 오디오그램 틀에 ASHA 난청 정도 구간을 위에서 아래로 칠한 그림. 위쪽 −10~15dB가 정상, 아래로 갈수록 경미·경도·중등도·중등고도·고도·심도',
+    caption: 'ASHA 일반인 안내의 난청 정도 표(dB HL)를 오디오그램 틀에 그대로 옮겨 그렸어요. 세로축은 위가 작은 소리라서 점이 아래 구간에 찍힐수록 난청 정도가 커요. 점선 상자는 ASHA가 설명한 영어 말소리 범위(250~4000Hz, 20~60dB)를 사각형으로 단순하게 표시한 것이고, 실제 말소리 바나나는 곡선 모양이에요.',
+    svg: audioBands({title: '오디오그램에서 난청 정도 구간 (ASHA 기준)', bands: [[-10, 15, '정상 −10~15'], [15, 25, '경미 16~25'], [25, 40, '경도 26~40'], [40, 55, '중등도 41~55'], [55, 70, '중등고도 56~70'], [70, 90, '고도 71~90'], [90, 120, '심도 91 이상']], box: [250, 4000, 20, 60, '말소리 범위(대략)']})
+  }],
   'decibel-basics': [{src: '/images/calc-sum-60-60.png', file: 'calc-sum-60-60.png', h: 846, after: 2, alt: '근처소리 데시벨 계산기에 60dB와 60dB를 넣자 합친 크기 63dB가 나온 화면', caption: '근처소리 데시벨 계산기에 60dB 두 개를 넣고 직접 캡처한 화면이에요. 합친 크기는 120dB가 아니라 63dB로 나와요.'}, {
     file: 'db-sum.svg', after: 3,
     alt: '두 소리의 데시벨 차이가 0일 때 3dB, 10dB일 때 약 0.4dB만 더해진다는 것을 보여 주는 그래프',
