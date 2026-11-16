@@ -1,6 +1,6 @@
-// 사이트 공통 값. 도메인을 연결하면 ORIGIN을 'https://sorigyeol.com'처럼 바꾸고 빌드하세요.
-// 지금은 GitHub 주소(하위 경로 /sorigyeol-site)라서 optimize.mjs가 링크 앞에 BASE를 붙입니다.
-export const ORIGIN = 'https://kenshin240919-web.github.io/sorigyeol-site';
+// 사이트 공통 값. 도메인이 바뀌면 ORIGIN만 바꾸고 빌드하세요.
+// GitHub 주소처럼 하위 경로가 있으면 optimize.mjs가 링크 앞에 BASE를 붙이고, 도메인이면 BASE가 비어 CNAME이 생깁니다.
+export const ORIGIN = 'https://koreanearby.com';
 export const BASE = new URL(ORIGIN).pathname.replace(/\/$/, '');
 export const SITE = '소리결';
 export const TAGLINE = '소리의 과학과 생활';
