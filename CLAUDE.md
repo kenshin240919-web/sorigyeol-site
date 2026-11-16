@@ -18,8 +18,8 @@
 - 도메인 설정: config.mjs ORIGIN이 도메인이면 BASE가 비고 CNAME이 생김 → Pages 커스텀 도메인 설정 → Cloudflare DNS: A 레코드 4개(185.199.108.153 / 109 / 110 / 111) + `www` CNAME → `kenshin240919-web.github.io`, 프록시 끔(DNS only) → HTTPS 인증서·강제 적용 확인. **애드센스는 하위 경로 주소를 받지 않음. 도메인을 바꾸면 ads.txt가 새 도메인 루트에 있는지 확인.**
 
 ## 매일 자동 발행
-- Claude 데스크톱 예약 작업 **`sorigyeol-daily-post`**(매일 09:00쯤). 지시문: `C:\Users\User\.claude\scheduled-tasks\sorigyeol-daily-post\SKILL.md`. 앱이 꺼져 있으면 다음에 켤 때 실행됩니다.
-- 오늘 날짜 글이 이미 있으면 발행하지 않습니다.
+- Claude 데스크톱 예약 작업 **`sorigyeol-daily-post`**(매일 09:00·15:00, 실행마다 1편, 하루 최대 2편 — 2026-11-16 사용자 지시). 지시문: `C:\Users\User\.claude\scheduled-tasks\sorigyeol-daily-post\SKILL.md`. 앱이 꺼져 있으면 다음에 켤 때 실행됩니다.
+- 오늘 날짜 글이 이미 2편이면 발행하지 않습니다. 발행일은 항상 실제 작성일이며 날짜를 앞당기거나 소급하지 않습니다.
 
 ## 지킬 것
 - 공식·공신력 있는 출처(WHO, NIH/NIDCD, CDC/NIOSH, 질병관리청, 국가법령정보센터, 환경부, 대학·학회)를 직접 읽고 확인한 내용만 씁니다. `sources`에는 실제로 읽은 URL만.
