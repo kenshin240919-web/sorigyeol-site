@@ -1,4 +1,4 @@
-// 데시벨 계산기 화면을 직접 캡처해 images/에 저장합니다. (미리보기 서버가 8799에서 떠 있어야 함)
+// 데시벨 계산기 화면을 직접 캡처해 images/에 저장합니다. (NO_BASE=1로 빌드한 dist를 미리보기 서버 8799로 띄워 둔 상태에서)
 // 실행: node shots.mjs  — Playwright는 D:\guidejung\toss-src\node_modules 것을 빌려 씁니다.
 import {createRequire} from 'node:module';
 const {chromium} = createRequire('D:/guidejung/toss-src/tools/x.js')('playwright');

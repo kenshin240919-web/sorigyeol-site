@@ -33,3 +33,20 @@ visit(root);
 console.log(`Optimized ${count} HTML pages.`);
 await import('./generate-rss.mjs');
 await import('./apply-adsense.mjs');
+
+// GitHub 주소(하위 경로)에서는 사이트 안 링크 앞에 BASE를 붙입니다. 로컬 미리보기·캡처는 NO_BASE=1로 건너뜀.
+const { BASE } = await import('./config.mjs');
+if (BASE && !process.env.NO_BASE) {
+  const re = new RegExp(`((?:href|src|action)=")/(?!/|${BASE.slice(1)}/)`, 'g');
+  let n = 0;
+  (function walk(dir) {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const f = join(dir, e.name);
+      if (e.isDirectory()) { walk(f); continue; }
+      if (!e.name.endsWith('.html')) continue;
+      const html = readFileSync(f, 'utf8'), out = html.replace(re, `$1${BASE}/`);
+      if (out !== html) { writeFileSync(f, out); n++; }
+    }
+  })(root);
+  console.log(`Prefixed links with ${BASE} in ${n} pages.`);
+}

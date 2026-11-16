@@ -1,6 +1,6 @@
 import {guides} from './guides.mjs';
 import {figures} from './figures.mjs';
-import {ORIGIN as origin, SITE, TAGLINE, AUTHOR, EMAIL, START, OPERATOR_STORY} from './config.mjs';
+import {ORIGIN as origin, BASE, SITE, TAGLINE, AUTHOR, EMAIL, START, OPERATOR_STORY} from './config.mjs';
 import {mkdirSync, writeFileSync, copyFileSync, existsSync, readdirSync} from 'node:fs';
 
 const root = 'dist';
@@ -71,7 +71,7 @@ write('404.html', page('페이지를 찾지 못했어요', '주소가 바뀌었�
 
 write('favicon.svg', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="18" fill="#1f2a44"/><path d="M10 32h8l5-14 8 28 7-20 5 12 4-6h7" fill="none" stroke="#e0a33a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
 write('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
-write('CNAME', new URL(origin).host + '\n');
+if (!BASE) write('CNAME', new URL(origin).host + '\n');
 write('.nojekyll', '');
 write('ads.txt', 'google.com, pub-1265732107215441, DIRECT, f08c47fec0942fa0\n');
 for (const f of ['style.css', 'site.js', 'tool.js']) copyFileSync(f, root + '/' + f);

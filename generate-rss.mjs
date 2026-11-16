@@ -2,12 +2,12 @@ import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 const root = resolve('dist');
-import { ORIGIN as origin, SITE, TAGLINE } from './config.mjs';
+import { ORIGIN as origin, BASE, SITE, TAGLINE } from './config.mjs';
 const feedUrl = `${origin}/rss.xml`;
 const xml = value => String(value).replace(/[<>&"']/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' })[c]);
 const sitemap = readFileSync(join(root, 'sitemap.xml'), 'utf8');
 const items = [...sitemap.matchAll(/<loc>([^<]+\/guides\/[^<]+)<\/loc>/g)].map(([ , url]) => {
-  const html = readFileSync(join(root, new URL(url).pathname, 'index.html'), 'utf8');
+  const html = readFileSync(join(root, new URL(url).pathname.slice(BASE.length), 'index.html'), 'utf8');
   const article = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
     .map(m => JSON.parse(m[1])).find(data => data['@type'] === 'Article');
   if (!article?.headline || !article.description || !article.datePublished) throw new Error(`Incomplete article metadata: ${url}`);

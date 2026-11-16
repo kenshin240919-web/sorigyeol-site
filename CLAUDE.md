@@ -10,11 +10,12 @@
 - `shots.mjs`: 데시벨 계산기 화면을 Playwright로 캡처해 `images/`에 저장(미리보기 서버 8799 필요). Playwright는 `D:\guidejung\toss-src\tools\node_modules`를 빌려 씁니다.
 - `tool.js`: 데시벨 계산기(두 소리 합치기, 거리 감쇠, NIOSH 노출 시간).
 - 빌드: `node build.mjs && node optimize.mjs` → `dist/` (git에는 안 올림, Actions가 빌드). 페이지·사이트맵(xml·html)·RSS·ads.txt·CNAME·.nojekyll·애드센스 코드가 자동으로 들어갑니다.
-- 미리보기: `python -m http.server 8799 --directory dist`
+- 미리보기: `NO_BASE=1 node optimize.mjs` 뒤 `python -m http.server 8799 --directory dist`
 
 ## 배포
 - 저장소: kenshin240919-web/sorigyeol-site (**공개**, 키·개인정보 금지). `main`에 push하면 `.github/workflows/pages.yml`이 빌드해 GitHub Pages로 배포합니다.
-- 도메인: Cloudflare에서 구매·DNS 관리. A 레코드 4개(185.199.108.153 / 109 / 110 / 111) + `www` CNAME → `kenshin240919-web.github.io`, **프록시 끔(회색 구름, DNS only)**. HTTPS 인증서는 GitHub가 발급·갱신합니다.
+- 주소: 지금은 GitHub 주소 https://kenshin240919-web.github.io/sorigyeol-site/ (하위 경로라 optimize.mjs가 링크 앞에 /sorigyeol-site를 붙임, 로컬 미리보기는 `NO_BASE=1 node optimize.mjs`). Pages 커스텀 도메인은 비워 둠.
+- 도메인(sorigyeol.com, Cloudflare 구매 예정)을 연결할 때: config.mjs ORIGIN을 https://sorigyeol.com 으로 바꾸면 BASE가 비고 CNAME이 생김 → Pages 커스텀 도메인 설정 → Cloudflare DNS: A 레코드 4개(185.199.108.153 / 109 / 110 / 111) + `www` CNAME → `kenshin240919-web.github.io`, 프록시 끔(DNS only) → HTTPS 인증서·강제 적용 확인. **애드센스는 하위 경로 주소를 받지 않으므로 신청 전에 도메인을 꼭 연결.**
 
 ## 매일 자동 발행
 - Claude 데스크톱 예약 작업 **`sorigyeol-daily-post`**(매일 09:00쯤). 지시문: `C:\Users\User\.claude\scheduled-tasks\sorigyeol-daily-post\SKILL.md`. 앱이 꺼져 있으면 다음에 켤 때 실행됩니다.
