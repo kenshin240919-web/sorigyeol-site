@@ -1,0 +1,107 @@
+// 글에 들어가는 그림. 모두 공식(수식)이나 글에 적힌 기준값으로 직접 그린 SVG입니다.
+// 형식: figures[slug] = [{file, after(몇 번째 소제목 뒤, 0부터), alt, caption, svg}]
+const C = {ink: '#242c40', navy: '#1f2a44', amber: '#d9962b', teal: '#2f7d8c', grid: '#e4e7ee', muted: '#6b7182', bg: '#fbfaf7'};
+const F = 'font-family="Malgun Gothic,Apple SD Gothic Neo,sans-serif"';
+const n = v => +v.toFixed(1);
+
+// 선 그래프. x가 로그 축이면 xLog:true
+function chart({w = 720, h = 400, title, x, y, xLog = false, yLog = false, xTicks, yTicks, xLabel, yLabel, series, notes = []}) {
+  const L = 64, R = 24, T = 78, B = 58, pw = w - L - R, ph = h - T - B;
+  const tx = xLog ? v => L + (Math.log10(v) - Math.log10(x[0])) / (Math.log10(x[1]) - Math.log10(x[0])) * pw : v => L + (v - x[0]) / (x[1] - x[0]) * pw;
+  const ty = yLog ? v => T + (1 - (Math.log10(v) - Math.log10(y[0])) / (Math.log10(y[1]) - Math.log10(y[0]))) * ph : v => T + (1 - (v - y[0]) / (y[1] - y[0])) * ph;
+  yTicks = yTicks.map(t => Array.isArray(t) ? t : [t, t]);
+  const grid = yTicks.map(([v, t]) => `<line x1="${L}" x2="${L + pw}" y1="${n(ty(v))}" y2="${n(ty(v))}" stroke="${C.grid}"/><text x="${L - 8}" y="${n(ty(v)) + 4}" text-anchor="end" font-size="12" fill="${C.muted}">${t}</text>`).join('')
+    + xTicks.map(([v, t = v]) => `<line x1="${n(tx(v))}" x2="${n(tx(v))}" y1="${T}" y2="${T + ph}" stroke="${C.grid}"/><text x="${n(tx(v))}" y="${T + ph + 18}" text-anchor="middle" font-size="12" fill="${C.muted}">${t}</text>`).join('');
+  const lines = series.map(s => `<polyline fill="none" stroke="${s.color}" stroke-width="3" stroke-linejoin="round" ${s.dash ? 'stroke-dasharray="7 6"' : ''} points="${s.pts.map(([a, b]) => `${n(tx(a))},${n(ty(b))}`).join(' ')}"/>`).join('');
+  const legend = series.map((s, i) => `<g transform="translate(${L + 8 + i * 230},${T - 26})"><line x2="22" stroke="${s.color}" stroke-width="3" ${s.dash ? 'stroke-dasharray="7 6"' : ''}/><text x="30" y="4" font-size="13" fill="${C.ink}">${s.label}</text></g>`).join('');
+  const marks = notes.map(([a, b, t, anchor = 'start']) => `<circle cx="${n(tx(a))}" cy="${n(ty(b))}" r="4.5" fill="${C.ink}"/><text x="${n(tx(a)) + (anchor === 'end' ? -9 : 9)}" y="${n(ty(b)) - 8}" text-anchor="${anchor}" font-size="12.5" fill="${C.ink}">${t}</text>`).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" ${F}><rect width="${w}" height="${h}" fill="${C.bg}"/><text x="${L}" y="24" font-size="16" font-weight="700" fill="${C.ink}">${title}</text>${grid}<rect x="${L}" y="${T}" width="${pw}" height="${ph}" fill="none" stroke="#c9ced8"/>${lines}${legend}${marks}<text x="${L + pw / 2}" y="${h - 12}" text-anchor="middle" font-size="13" fill="${C.ink}">${xLabel}</text><text transform="translate(16,${T + ph / 2}) rotate(-90)" text-anchor="middle" font-size="13" fill="${C.ink}">${yLabel}</text></svg>`;
+}
+const range = (a, b, step) => { const r = []; for (let v = a; v <= b + 1e-9; v += step) r.push(+v.toFixed(4)); return r; };
+const logRange = (a, b, k = 120) => range(0, k, 1).map(i => a * (b / a) ** (i / k));
+
+// 묶음 막대 그래프
+function bars({w = 720, h = 380, title, groups, labels, max}) {
+  const L = 60, T = 60, B = 60, ph = h - T - B, gw = (w - L - 30) / groups.length, bw = 64, cols = [C.navy, C.amber];
+  const ty = v => T + ph - v / max * ph;
+  const grid = range(0, max, 10).map(v => `<line x1="${L}" x2="${w - 30}" y1="${ty(v)}" y2="${ty(v)}" stroke="${C.grid}"/><text x="${L - 8}" y="${ty(v) + 4}" text-anchor="end" font-size="12" fill="${C.muted}">${v}</text>`).join('');
+  const body = groups.map(([name, ...vals], g) => vals.map((v, i) => { const x = L + g * gw + gw / 2 - bw + i * bw + 4; return `<rect x="${x}" y="${ty(v)}" width="${bw - 8}" height="${ty(0) - ty(v)}" rx="4" fill="${cols[i]}"/><text x="${x + (bw - 8) / 2}" y="${ty(v) - 7}" text-anchor="middle" font-size="15" font-weight="700" fill="${C.ink}">${v}</text>`; }).join('') + `<text x="${L + g * gw + gw / 2}" y="${h - 30}" text-anchor="middle" font-size="13" fill="${C.ink}">${name}</text>`).join('');
+  const legend = labels.map((l, i) => `<rect x="${w - 190 + i * 80}" y="16" width="14" height="14" rx="3" fill="${cols[i]}"/><text x="${w - 170 + i * 80}" y="28" font-size="13" fill="${C.ink}">${l}</text>`).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" ${F}><rect width="${w}" height="${h}" fill="${C.bg}"/><text x="${L}" y="28" font-size="16" font-weight="700" fill="${C.ink}">${title}</text>${legend}${grid}${body}</svg>`;
+}
+
+// IEC 61672-1 A·C 가중 곡선 식
+const ra = f => (12194 ** 2 * f ** 4) / ((f * f + 20.6 ** 2) * Math.sqrt((f * f + 107.7 ** 2) * (f * f + 737.9 ** 2)) * (f * f + 12194 ** 2));
+const rc = f => (12194 ** 2 * f * f) / ((f * f + 20.6 ** 2) * (f * f + 12194 ** 2));
+const A = f => 20 * Math.log10(ra(f)) + 2.0, Cw = f => 20 * Math.log10(rc(f)) + 0.06;
+const fTicks = [[20], [50], [100], [200], [500], [1000, '1k'], [2000, '2k'], [5000, '5k'], [10000, '10k'], [20000, '20k']];
+
+export const figures = {
+  'decibel-basics': [{src: '/images/calc-sum-60-60.png', file: 'calc-sum-60-60.png', h: 846, after: 2, alt: '소리결 데시벨 계산기에 60dB와 60dB를 넣자 합친 크기 63dB가 나온 화면', caption: '소리결 데시벨 계산기에 60dB 두 개를 넣고 직접 캡처한 화면이에요. 합친 크기는 120dB가 아니라 63dB로 나와요.'}, {
+    file: 'db-sum.svg', after: 3,
+    alt: '두 소리의 데시벨 차이가 0일 때 3dB, 10dB일 때 약 0.4dB만 더해진다는 것을 보여 주는 그래프',
+    caption: '큰 소리에 작은 소리를 더하면 몇 dB가 늘어날까요. 10·log10(10^(L1/10)+10^(L2/10)) 식으로 직접 계산해 그렸어요. 두 소리가 같으면 3dB, 10dB 넘게 차이 나면 0.4dB 아래로 거의 늘지 않아요.',
+    svg: chart({title: '두 소리를 더할 때 늘어나는 양', x: [0, 20], y: [0, 3.5], xTicks: range(0, 20, 2).map(v => [v]), yTicks: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5], xLabel: '두 소리의 차이 (dB)', yLabel: '큰 소리보다 늘어나는 양 (dB)',
+      series: [{label: '합친 소리 − 큰 소리', color: C.navy, pts: range(0, 20, 0.25).map(d => [d, 10 * Math.log10(1 + 10 ** (-d / 10))])}],
+      notes: [[0, 3.01, '같은 크기: +3.0dB'], [6, 0.97, '6dB 차이: +1.0dB'], [10, 0.41, '10dB 차이: +0.4dB']]})
+  }],
+  'a-weighting-dba': [{
+    file: 'a-c-weighting.svg', after: 2,
+    alt: '20Hz부터 20kHz까지 A가중과 C가중 곡선. A가중은 저음에서 크게 깎이고 C가중은 거의 평평하다',
+    caption: 'IEC 61672-1에 나온 A·C 가중 식으로 직접 계산해 그린 곡선이에요. 1kHz에서 둘 다 0dB이고, 100Hz에서 A가중은 약 −19dB, C가중은 약 −0.3dB예요. 저음이 많은 소리는 dB(A)로 재면 작게 나오는 이유예요.',
+    svg: chart({title: '주파수별 가중치: A가중과 C가중', x: [20, 20000], xLog: true, y: [-60, 10], xTicks: fTicks, yTicks: [-60, -50, -40, -30, -20, -10, 0, 10], xLabel: '주파수 (Hz)', yLabel: '가중치 (dB)',
+      series: [{label: 'A가중 dB(A)', color: C.navy, pts: logRange(20, 20000).map(f => [f, A(f)])}, {label: 'C가중 dB(C)', color: C.amber, dash: true, pts: logRange(20, 20000).map(f => [f, Cw(f)])}],
+      notes: [[100, A(100), `100Hz: A ${A(100).toFixed(1)}dB`], [1000, 0, '1kHz: 0dB']]})
+  }],
+  'frequency-hearing-range': [{
+    file: 'octave-waves.svg', after: 3,
+    alt: '220Hz와 한 옥타브 위인 440Hz 사인파를 10밀리초 동안 겹쳐 그린 그림. 440Hz는 같은 시간에 두 배 많이 진동한다',
+    caption: '220Hz와 440Hz 사인파를 같은 10ms 구간에 그렸어요. 주파수가 두 배(한 옥타브)가 되면 같은 시간에 두 배 더 많이 떨려요. 소리 속도를 20℃ 기준 초속 344m로 잡으면 파장은 220Hz가 약 1.56m, 440Hz가 약 0.78m예요(계산 예시).',
+    svg: chart({title: '한 옥타브 차이: 220Hz와 440Hz', x: [0, 10], y: [-1.3, 1.3], xTicks: range(0, 10, 1).map(v => [v]), yTicks: [-1, 0, 1], xLabel: '시간 (ms)', yLabel: '공기 압력 변화 (상대값)',
+      series: [{label: '220Hz', color: C.navy, pts: range(0, 10, 0.02).map(t => [t, Math.sin(2 * Math.PI * 220 * t / 1000)])}, {label: '440Hz (한 옥타브 위)', color: C.amber, pts: range(0, 10, 0.02).map(t => [t, 0.75 * Math.sin(2 * Math.PI * 440 * t / 1000)])}]})
+  }],
+  'sound-distance': [{src: '/images/calc-dist-80-1-8.png', file: 'calc-dist-80-1-8.png', h: 1106, after: 1, alt: '소리결 데시벨 계산기에 1m에서 80dB, 새 거리 8m를 넣자 약 61.9dB가 나온 화면', caption: '1m에서 80dB인 소리를 8m에서 들으면 어떨까요. 소리결 계산기에 넣고 직접 캡처한 화면이에요. 거리가 두 배씩 세 번 늘어 약 18dB 줄어든 61.9dB로 나와요(점음원, 반사 없는 바깥 기준).'}, {
+    file: 'distance-decay.svg', after: 2,
+    alt: '1m에서 80dB인 점음원과 선음원이 거리에 따라 줄어드는 그래프. 점음원은 거리 두 배마다 6dB, 선음원은 3dB 줄어든다',
+    caption: '1m에서 80dB라고 가정하고 계산한 예시예요. 점음원은 20·log10(거리비), 선음원은 10·log10(거리비)만큼 줄여 그렸어요. 반사가 없는 이상적인 바깥 공간 기준이라 실제 측정값과는 다를 수 있어요.',
+    svg: chart({title: '거리에 따른 소리 크기 (계산 예시)', x: [1, 64], xLog: true, y: [40, 85], xTicks: [[1], [2], [4], [8], [16], [32], [64]], yTicks: [40, 50, 60, 70, 80], xLabel: '음원과의 거리 (m)', yLabel: '소리 크기 (dB)',
+      series: [{label: '점음원 (−6dB/두 배)', color: C.navy, pts: logRange(1, 64).map(r => [r, 80 - 20 * Math.log10(r)])}, {label: '선음원 (−3dB/두 배)', color: C.amber, dash: true, pts: logRange(1, 64).map(r => [r, 80 - 10 * Math.log10(r)])}],
+      notes: [[2, 74, '2m: 74dB'], [8, 62, '8m: 62dB'], [8, 71, '8m: 71dB', 'end']]})
+  }],
+  'reverberation-time': [{
+    file: 'rt60-decay.svg', after: 2,
+    alt: '50세제곱미터 방의 계산 예시. 빈 방은 2.1초, 카펫을 깔면 0.72초, 커튼까지 달면 0.54초 만에 소리가 60dB 줄어든다',
+    caption: '위 계산 예시의 세 경우를 그래프로 옮겼어요. 소리를 멈춘 뒤 60dB 줄어들 때까지 걸리는 시간이 잔향시간이에요. 세이빈 공식은 소리가 일정하게 줄어든다고 보기 때문에 직선으로 그렸고, 실제 방에서 재면 선이 울퉁불퉁하게 나와요.',
+    svg: chart({title: '같은 방, 흡음량에 따라 달라지는 잔향시간 (계산 예시)', x: [0, 2.4], y: [-70, 0], xTicks: range(0, 2.4, 0.4).map(v => [v, v.toFixed(1)]), yTicks: [-70, -60, -50, -40, -30, -20, -10, 0], xLabel: '소리가 멈춘 뒤 지난 시간 (초)', yLabel: '처음보다 줄어든 양 (dB)',
+      series: [{label: '빈 방 2.1초', color: C.navy, pts: [[0, 0], [2.4, -60 * 2.4 / 2.1]]}, {label: '카펫 0.72초', color: C.amber, dash: true, pts: [[0, 0], [0.84, -70]]}, {label: '+커튼 0.54초', color: C.teal, pts: [[0, 0], [0.63, -70]]}],
+      notes: [[2.1, -60, '2.1초', 'end'], [0.72, -60, '0.72초'], [0.54, -60, '0.54초', 'end']]})
+  }],
+  'floor-noise-standard': [{
+    file: 'floor-noise-limits.svg', after: 1,
+    alt: '층간소음 기준값 막대그래프. 직접충격 1분 등가 주간 39 야간 34, 최고 주간 57 야간 52, 공기전달 5분 등가 주간 45 야간 40 dB(A)',
+    caption: '「공동주택 층간소음의 범위와 기준에 관한 규칙」 별표(2023. 1. 2. 시행)에 나온 기준값을 막대로 옮겼어요. 주간은 06:00~22:00, 야간은 22:00~06:00이에요. 오래된 공동주택 보정값은 반영하지 않았어요.',
+    svg: bars({title: '층간소음 기준 (단위 dB(A))', groups: [['직접충격 1분 등가', 39, 34], ['직접충격 최고', 57, 52], ['공기전달 5분 등가', 45, 40]], labels: ['주간', '야간'], max: 60})
+  }],
+  'soundproofing-vs-absorption': [{
+    file: 'absorb-vs-block.svg', after: 2,
+    alt: '벽에 닿은 소리가 반사, 흡수, 투과로 나뉘는 모습을 그린 도식. 흡음은 반사를 줄이고 차음은 투과를 줄인다',
+    caption: '벽에 닿은 소리는 일부는 되돌아오고(반사), 일부는 벽 속에서 열로 바뀌고(흡수), 일부는 벽을 지나 옆방으로 가요(투과). 흡음은 방 안으로 되돌아오는 소리를, 차음은 옆방으로 넘어가는 소리를 줄이는 일이에요. 이해를 돕기 위해 직접 그린 도식이에요.',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" ${F}><defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="context-stroke"/></marker></defs><rect width="720" height="360" fill="${C.bg}"/><text x="40" y="34" font-size="16" font-weight="700" fill="${C.ink}">벽에 닿은 소리는 세 갈래로 나뉘어요</text><text x="150" y="70" text-anchor="middle" font-size="14" fill="${C.muted}">내 방</text><text x="590" y="70" text-anchor="middle" font-size="14" fill="${C.muted}">옆방</text><rect x="330" y="80" width="70" height="250" fill="#d9dde6"/><rect x="330" y="80" width="18" height="250" fill="#f0d8ac"/><text x="365" y="350" text-anchor="middle" font-size="12" fill="${C.muted}">벽 (왼쪽 노란 면 = 흡음재)</text><path d="M60 130 C160 150 250 175 326 200" stroke="${C.navy}" stroke-width="5" fill="none" marker-end="url(#a)"/><text x="60" y="118" font-size="14" fill="${C.ink}">들어오는 소리</text><path d="M326 215 C250 245 170 270 80 290" stroke="${C.amber}" stroke-width="4" fill="none" marker-end="url(#a)"/><text x="70" y="314" font-size="14" fill="${C.ink}">반사 → 흡음으로 줄여요</text><path d="M342 205 q8 -18 16 0 t16 0" stroke="${C.teal}" stroke-width="3" fill="none"/><text x="365" y="180" text-anchor="middle" font-size="13" fill="${C.ink}">흡수(열)</text><path d="M404 205 C470 205 530 205 640 205" stroke="${C.navy}" stroke-width="2.5" stroke-dasharray="6 5" fill="none" marker-end="url(#a)"/><text x="420" y="240" font-size="14" fill="${C.ink}">투과 → 차음으로 줄여요</text><text x="420" y="262" font-size="12" fill="${C.muted}">무겁고 틈 없는 벽일수록 적게 넘어가요</text></svg>`
+  }],
+  'safe-listening-earphones': [{
+    file: 'who-weekly-allowance.svg', after: 1,
+    alt: 'WHO 기준 소리 크기별 일주일 허용 시간 그래프. 성인은 80dB에서 40시간, 3dB 오를 때마다 절반으로 줄고 어린이 기준은 75dB에서 40시간이다',
+    caption: 'WHO 안전한 듣기 기준(성인 80dB로 주 40시간, 어린이·민감한 사람 75dB로 주 40시간)에서 3dB 오를 때마다 시간이 절반이 되도록 계산해 그렸어요. 점은 WHO 안내에 실린 값이에요. 세로축은 눈금 하나마다 4배씩 커지는 로그 눈금이에요.',
+    svg: chart({title: '소리 크기별 일주일 허용 시간 (WHO 기준)', x: [75, 120], y: [1 / 360, 64], yLog: true, xTicks: range(75, 120, 5).map(v => [v]), yTicks: [[0.002777777777777778,"10초"],[0.016666666666666666,"1분"],[0.25,"15분"],[1,"1시간"],[4,"4시간"],[16,"16시간"],[64,"64시간"]], xLabel: '소리 크기 (dB)', yLabel: '일주일 허용 시간',
+      series: [{label: '성인 (80dB · 주 40시간)', color: C.navy, pts: range(75, 120, 0.5).map(L => [L, 40 / 2 ** ((L - 80) / 3)]).filter(p => p[1] <= 64)}, {label: '어린이·민감한 사람 (75dB)', color: C.amber, dash: true, pts: range(75, 120, 0.5).map(L => [L, 40 / 2 ** ((L - 75) / 3)]).filter(p => p[1] >= 1 / 360)}],
+      notes: [[80, 40, '80dB: 40시간'], [90, 4, '90dB: 4시간'], [100, 1 / 3, '100dB: 20분'], [110, 1 / 24, '110dB: 2분 30초']]})
+  }],
+  'noise-exposure-time': [{src: '/images/calc-time-94.png', file: 'calc-time-94.png', h: 750, after: 2, alt: '소리결 데시벨 계산기에 94dBA를 넣자 하루 권고 노출 시간 약 1시간이 나온 화면', caption: '소리결 계산기에 94dBA를 넣고 직접 캡처한 화면이에요. NIOSH 권고(85dBA 8시간, 3dB 교환율)로 계산하면 85dBA보다 9dB 높으니 8시간을 세 번 절반으로 나눈 1시간이 나와요.'}, {
+    file: 'niosh-osha-time.svg', after: 3,
+    alt: '소음 크기별 하루 허용 시간을 NIOSH 권고와 OSHA 기준으로 비교한 그래프. 100dBA에서 NIOSH는 15분, OSHA는 2시간이다',
+    caption: 'NIOSH 권고(85dBA 8시간, 3dB마다 절반)와 OSHA 기준(90dBA 8시간, 5dB마다 절반)을 각 기준식으로 계산해 그렸어요. 같은 100dBA라도 NIOSH는 15분, OSHA는 2시간이라 8배 차이가 나요. 세로축은 로그 눈금이에요.',
+    svg: chart({title: '하루 허용 노출 시간: NIOSH 권고와 OSHA 기준', x: [85, 115], y: [1 / 360, 16], yLog: true, xTicks: range(85, 115, 5).map(v => [v]), yTicks: [[0.002777777777777778,"10초"],[0.016666666666666666,"1분"],[0.25,"15분"],[1,"1시간"],[4,"4시간"],[16,"16시간"]], xLabel: '소음 크기 (dBA)', yLabel: '하루 허용 시간',
+      series: [{label: 'NIOSH 권고 (3dB 교환율)', color: C.navy, pts: range(85, 115, 0.5).map(L => [L, 8 / 2 ** ((L - 85) / 3)])}, {label: 'OSHA 기준 (5dB 교환율)', color: C.amber, dash: true, pts: range(85, 115, 0.5).map(L => [L, 8 / 2 ** ((L - 90) / 5)])}],
+      notes: [[85, 8, '85dBA: 8시간'], [100, 0.25, 'NIOSH 100dBA: 15분', 'end'], [100, 2, 'OSHA 100dBA: 2시간']]})
+  }]
+};
