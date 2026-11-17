@@ -49,6 +49,14 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'speed-of-sound-temperature': [{
+    file: 'sound-speed-temp.svg', after: 1,
+    alt: '영하 20도부터 40도까지 공기 중 소리 속도. 기온이 오를수록 거의 직선으로 빨라져 0도 약 331m/s, 20도 약 343m/s, 35도 약 352m/s',
+    caption: 'HyperPhysics 정밀식(20.05 × √(기온 + 273.15))과 어림식(331.4 + 0.6 × 기온)으로 직접 계산해 그렸어요. 마른 공기 기준이고, 사람이 지내는 기온 범위에서는 두 선이 거의 겹쳐요.',
+    svg: chart({title: '기온에 따른 공기 중 소리 속도', x: [-20, 40], y: [315, 360], xTicks: range(-20, 40, 10).map(v => [v, v + '℃']), yTicks: [320, 330, 340, 350, 360], xLabel: '기온 (℃)', yLabel: '소리 속도 (m/s)',
+      series: [{label: '정밀식 (HyperPhysics)', color: C.navy, pts: range(-20, 40, 1).map(t => [t, 20.0514 * Math.sqrt(t + 273.15)])}, {label: '어림식 331.4 + 0.6T', color: C.amber, dash: true, pts: range(-20, 40, 1).map(t => [t, 331.4 + 0.6 * t])}],
+      notes: [[0, 331.4, '0℃: 약 331m/s'], [20, 343.2, '20℃: 약 343m/s'], [35, 352.0, '35℃: 약 352m/s', 'end']]})
+  }],
   'audiogram-reading': [{
     file: 'audiogram-degrees.svg', after: 3,
     alt: '125Hz부터 8000Hz까지의 오디오그램 틀에 ASHA 난청 정도 구간을 위에서 아래로 칠한 그림. 위쪽 −10~15dB가 정상, 아래로 갈수록 경미·경도·중등도·중등고도·고도·심도',
