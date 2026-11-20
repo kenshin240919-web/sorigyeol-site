@@ -49,6 +49,12 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'environmental-noise-standard': [{
+    file: 'environmental-noise-standard.svg', h: 274, after: 2,
+    alt: '소음 환경기준 낮과 밤 값. 일반 가지역 50·40, 나지역 55·45, 다지역 65·55, 라지역 70·65, 도로변 가·나지역 65·55, 다지역 70·60, 라지역 75·70 데시벨',
+    caption: '환경정책기본법 시행령 소음 환경기준(국가소음정보시스템 게재 표)의 Leq dB(A) 값을 그대로 막대로 옮겼어요. 왼쪽 네 묶음은 일반 지역, 오른쪽 세 묶음은 차선 2개 이상 도로 옆의 도로변 지역이에요.',
+    svg: bars({w: 1000, title: '소음 환경기준 (단위 Leq dB(A))', groups: [['가', 50, 40], ['나', 55, 45], ['다', 65, 55], ['라', 70, 65], ['도로변 가·나', 65, 55], ['도로변 다', 70, 60], ['도로변 라', 75, 70]], labels: ['낮', '밤'], max: 80})
+  }],
   'speed-of-sound-temperature': [{
     file: 'sound-speed-temp.svg', after: 1,
     alt: '영하 20도부터 40도까지 공기 중 소리 속도. 기온이 오를수록 거의 직선으로 빨라져 0도 약 331m/s, 20도 약 343m/s, 35도 약 352m/s',
