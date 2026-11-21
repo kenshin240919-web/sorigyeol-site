@@ -49,6 +49,12 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'who-environmental-noise-guidelines': [{
+    file: 'who-noise-guideline-levels.svg', after: 2,
+    alt: 'WHO 환경소음 가이드라인 권고값. 도로 Lden 53·Lnight 45, 철도 54·44, 항공기 45·40, 풍력발전기 Lden 45 데시벨이고 풍력의 밤 권고값은 없음',
+    caption: 'WHO 유럽지역사무소 환경소음 가이드라인(2018)의 소음원별 권고값을 그대로 막대로 옮겼어요. 풍력발전기는 밤 근거가 부족해 Lnight 권고값이 없어요. 여가 소음(1년 평균 LAeq,24h 70dB)은 지표가 달라 넣지 않았어요.',
+    svg: bars({title: 'WHO 소음원별 권고값 (dB)', groups: [['도로', 53, 45], ['철도', 54, 44], ['항공기', 45, 40], ['풍력발전기', 45]], labels: ['Lden', 'Lnight'], max: 60})
+  }],
   'doppler-effect': [{
     file: 'doppler-shift.svg', after: 2,
     alt: '440Hz 음을 내는 물체의 속도가 초속 0에서 100m로 빨라질 때 다가오면 들리는 주파수는 620Hz까지 오르고, 멀어지면 341Hz까지 내려가는 그래프',
