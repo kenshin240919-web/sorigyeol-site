@@ -49,6 +49,14 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'doppler-effect': [{
+    file: 'doppler-shift.svg', after: 2,
+    alt: '440Hz 음을 내는 물체의 속도가 초속 0에서 100m로 빨라질 때 다가오면 들리는 주파수는 620Hz까지 오르고, 멀어지면 341Hz까지 내려가는 그래프',
+    caption: 'HyperPhysics 식(440 × 343.7 ÷ (343.7 ∓ 움직이는 속도))으로 직접 계산해 그렸어요. 기온 20℃, 듣는 사람은 서 있고 소리를 내는 물체가 곧장 다가오거나 멀어지는 경우예요. 다가올 때 올라가는 폭이 멀어질 때 내려가는 폭보다 커요.',
+    svg: chart({title: '움직이는 속도에 따라 들리는 440Hz 음', x: [0, 100], y: [300, 650], xTicks: range(0, 100, 20).map(v => [v]), yTicks: [300, 350, 400, 450, 500, 550, 600, 650], xLabel: '소리를 내는 물체의 속도 (m/s)', yLabel: '들리는 주파수 (Hz)',
+      series: [{label: '다가올 때', color: C.navy, pts: range(0, 100, 1).map(v => [v, 440 * 343.7 / (343.7 - v)])}, {label: '멀어질 때', color: C.amber, pts: range(0, 100, 1).map(v => [v, 440 * 343.7 / (343.7 + v)])}, {label: '원래 음 440Hz', color: C.muted, dash: true, pts: [[0, 440], [100, 440]]}],
+      notes: [[25, 474.5, '25m/s: 약 474Hz'], [25, 410.2, '25m/s: 약 410Hz'], [100, 620.5, '100m/s: 약 620Hz', 'end']]})
+  }],
   'environmental-noise-standard': [{
     file: 'environmental-noise-standard.svg', h: 274, after: 2,
     alt: '소음 환경기준 낮과 밤 값. 일반 가지역 50·40, 나지역 55·45, 다지역 65·55, 라지역 70·65, 도로변 가·나지역 65·55, 다지역 70·60, 라지역 75·70 데시벨',
