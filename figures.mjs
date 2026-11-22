@@ -49,6 +49,14 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'room-modes-standing-waves': [{
+    file: 'room-mode-pressure.svg', after: 3,
+    alt: '길이 5m 방에서 34.3Hz, 68.6Hz, 102.9Hz 공명의 음압 크기 그래프. 세 곡선 모두 양쪽 벽에서 최대이고 34.3Hz는 2.5m, 68.6Hz는 1.25m와 3.75m, 102.9Hz는 약 0.83m·2.5m·4.17m에서 0이 됨',
+    caption: '양 끝이 단단한 벽인 길이 5m 공간의 공명 주파수(n × 343 ÷ 10)에서, 음압 크기를 |cos(n × π × 위치 ÷ 5)|로 직접 계산해 그렸어요. 벽에서의 값을 1로 둔 상대값이고, 벽의 흡음과 다른 방향의 공명은 넣지 않은 계산 예시예요.',
+    svg: chart({title: '길이 5m 방의 위치별 음압 크기 (계산 예시)', x: [0, 5], y: [0, 1.1], xTicks: range(0, 5, 1).map(v => [v]), yTicks: [0, 0.5, 1], xLabel: '한쪽 벽에서 잰 거리 (m)', yLabel: '음압 크기 (벽 = 1)',
+      series: [1, 2, 3].map((k, i) => ({label: ['34.3Hz (n=1)', '68.6Hz (n=2)', '102.9Hz (n=3)'][i], color: [C.navy, C.amber, C.teal][i], pts: range(0, 5, 0.02).map(v => [v, Math.abs(Math.cos(k * Math.PI * v / 5))])})),
+      notes: [[2.5, 0, '한가운데: 34.3·102.9Hz 마디']]})
+  }],
   'who-environmental-noise-guidelines': [{
     file: 'who-noise-guideline-levels.svg', after: 2,
     alt: 'WHO 환경소음 가이드라인 권고값. 도로 Lden 53·Lnight 45, 철도 54·44, 항공기 45·40, 풍력발전기 Lden 45 데시벨이고 풍력의 밤 권고값은 없음',
