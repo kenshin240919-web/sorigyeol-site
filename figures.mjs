@@ -57,6 +57,12 @@ export const figures = {
       series: [1, 2, 3].map((k, i) => ({label: ['34.3Hz (n=1)', '68.6Hz (n=2)', '102.9Hz (n=3)'][i], color: [C.navy, C.amber, C.teal][i], pts: range(0, 5, 0.02).map(v => [v, Math.abs(Math.cos(k * Math.PI * v / 5))])})),
       notes: [[2.5, 0, '한가운데: 34.3·102.9Hz 마디']]})
   }],
+  'sound-meter-app-accuracy': [{
+    file: 'sound-app-device-diff.svg', after: 2,
+    alt: '같은 소음 측정 앱 10개를 iOS 기기 4종에서 돌렸을 때 기준 마이크와의 평균 차이. 아이폰 3GS 0.4·0.7, 아이폰 4S 0.8·2.6, 아이폰 5 3.6·4.8, 아이패드 4세대 2.7·5.4 데시벨',
+    caption: 'NIOSH 2014년 논문(Kardous·Shaw) 표 3의 기기별 평균 차이를 부호를 떼고 크기만 소수 첫째 자리로 옮겼어요. 잔향실에서 65~95dB 핑크 노이즈로, 교정하지 않은 앱 10개를 기기마다 돌린 평균이에요.',
+    svg: bars({title: '기기별 기준 마이크와의 평균 차이 (dB)', groups: [['아이폰 3GS', 0.4, 0.7], ['아이폰 4S', 0.8, 2.6], ['아이폰 5', 3.6, 4.8], ['아이패드 4세대', 2.7, 5.4]], labels: ['보정 없음', 'A특성'], max: 10})
+  }],
   'who-environmental-noise-guidelines': [{
     file: 'who-noise-guideline-levels.svg', after: 2,
     alt: 'WHO 환경소음 가이드라인 권고값. 도로 Lden 53·Lnight 45, 철도 54·44, 항공기 45·40, 풍력발전기 Lden 45 데시벨이고 풍력의 밤 권고값은 없음',
