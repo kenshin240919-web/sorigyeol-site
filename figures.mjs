@@ -49,6 +49,12 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'highway-noise-barrier': [{
+    file: 'noise-barrier-energy.svg', after: 2,
+    alt: '방음벽 삽입손실별로 줄어드는 소리 에너지 비율 막대그래프. 5dB 68%, 10dB 90%, 15dB 97%, 20dB 99%',
+    caption: 'FHWA 방음벽 설계 지침 3장 표의 에너지 감소율을 막대로 옮겼어요. 1 − 10^(−삽입손실 ÷ 10) 식으로 직접 계산해도 같은 값(68.4%, 90%, 96.8%, 99%)이 나와요. 귀에 들리는 크기는 10dB에서 절반, 20dB에서 4분의 1이에요.',
+    svg: bars({title: '방음벽 삽입손실별 줄어드는 소리 에너지 (%)', groups: [['5dB', 68], ['10dB', 90], ['15dB', 97], ['20dB', 99]], labels: ['에너지 감소율'], max: 100})
+  }],
   'sound-interference-noise-cancelling': [{
     file: 'interference-phase.svg', after: 1,
     alt: '크기와 주파수가 같은 두 소리를 위상차 0도부터 180도까지 어긋나게 더했을 때 하나일 때보다 몇 dB 커지거나 작아지는지 보여 주는 그래프. 0도 +6dB, 90도 +3dB, 120도 0dB, 150도 −5.7dB, 170도 −15.2dB로 180도에 가까울수록 급격히 작아져요',
