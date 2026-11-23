@@ -49,6 +49,14 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'sound-interference-noise-cancelling': [{
+    file: 'interference-phase.svg', after: 1,
+    alt: '크기와 주파수가 같은 두 소리를 위상차 0도부터 180도까지 어긋나게 더했을 때 하나일 때보다 몇 dB 커지거나 작아지는지 보여 주는 그래프. 0도 +6dB, 90도 +3dB, 120도 0dB, 150도 −5.7dB, 170도 −15.2dB로 180도에 가까울수록 급격히 작아져요',
+    caption: 'Russell 교수 해설의 식(합친 진폭 = 2 × cos(위상차 ÷ 2))을 20 × log₁₀로 바꿔 직접 계산해 그렸어요. 크기와 주파수가 같은 두 순음을 가정했고, 세로축 0dB는 소리 하나일 때예요. 180°에서는 이론상 완전히 사라지지만 그래프는 −30dB에서 잘랐어요.',
+    svg: chart({title: '같은 소리 두 개를 어긋나게 겹치면', x: [0, 180], y: [-30, 10], xTicks: range(0, 180, 30).map(v => [v, v + '°']), yTicks: [-30, -20, -10, 0, 6, 10], xLabel: '두 소리의 위상차', yLabel: '소리 하나일 때와 비교 (dB)',
+      series: [{label: '합친 소리', color: C.navy, pts: range(0, 179.4, 0.6).map(p => [p, Math.max(-30, 20 * Math.log10(2 * Math.cos(p * Math.PI / 360)))])}, {label: '소리 하나 (0dB)', color: C.muted, dash: true, pts: [[0, 0], [180, 0]]}],
+      notes: [[0, 6.02, '0°: +6dB'], [90, 3.01, '90°: +3dB'], [120, 0, '120°: 0dB', 'end'], [150, -5.72, '150°: −5.7dB', 'end'], [170, -15.2, '170°: −15.2dB', 'end']]})
+  }],
   'room-modes-standing-waves': [{
     file: 'room-mode-pressure.svg', after: 3,
     alt: '길이 5m 방에서 34.3Hz, 68.6Hz, 102.9Hz 공명의 음압 크기 그래프. 세 곡선 모두 양쪽 벽에서 최대이고 34.3Hz는 2.5m, 68.6Hz는 1.25m와 3.75m, 102.9Hz는 약 0.83m·2.5m·4.17m에서 0이 됨',
