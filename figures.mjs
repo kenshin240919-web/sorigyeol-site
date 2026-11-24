@@ -49,6 +49,12 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'earplug-nrr-rating': [{
+    file: 'earplug-nrr-derating.svg', after: 3,
+    alt: 'NRR 20, 25, 29, 33인 청력 보호구를 dBA 소음에서 쓸 때 OSHA 식으로 계산한 차음량. 7dB를 뺀 값은 13, 18, 22, 26dB이고 50% 보정하면 6.5, 9, 11, 13dB',
+    caption: 'OSHA 기술 매뉴얼 부록 F의 식으로 직접 계산한 값이에요. 남색은 NRR − 7, 주황색은 (NRR − 7) × 50%예요. 주변 소음을 dBA로 쟀을 때 귀 안의 소리가 몇 dB 줄어드는지 추정한 계산 예시이고, 착용 상태에 따라 실제 값은 달라요.',
+    svg: bars({title: 'NRR별 추정 차음량 (dBA 소음 기준, dB)', groups: [['NRR 20', 13, 6.5], ['NRR 25', 18, 9], ['NRR 29', 22, 11], ['NRR 33', 26, 13]], labels: ['7dB 뺀 값', '50% 보정'], max: 30})
+  }],
   'highway-noise-barrier': [{
     file: 'noise-barrier-energy.svg', after: 2,
     alt: '방음벽 삽입손실별로 줄어드는 소리 에너지 비율 막대그래프. 5dB 68%, 10dB 90%, 15dB 97%, 20dB 99%',
