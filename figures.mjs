@@ -49,6 +49,14 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'phon-sone-loudness': [{
+    file: 'phon-sone-curve.svg', after: 2,
+    alt: '크기 레벨(폰)에 따른 크기(손) 그래프. 40폰 1손, 50폰 2손, 60폰 4손, 80폰 16손, 100폰 64손으로 10폰마다 두 배씩 가파르게 올라감',
+    caption: 'HyperPhysics가 소개한 경험칙(40폰 = 1손, 10폰 오를 때마다 크기 두 배)을 손 = 2^((폰 − 40) ÷ 10) 식으로 직접 계산해 그렸어요. 같은 소리를 키울 때의 대략적인 값이고, 사람과 소리에 따라 실제 지각은 달라요.',
+    svg: chart({title: '폰이 10 오를 때마다 손은 두 배', x: [40, 100], y: [0, 70], xTicks: range(40, 100, 10).map(v => [v]), yTicks: [0, 16, 32, 48, 64], xLabel: '크기 레벨 (폰)', yLabel: '크기 (손)',
+      series: [{label: '손 = 2^((폰 − 40) ÷ 10)', color: C.navy, pts: range(40, 100, 1).map(p => [p, 2 ** ((p - 40) / 10)])}],
+      notes: [[40, 1, '40폰: 1손'], [60, 4, '60폰: 4손'], [80, 16, '80폰: 16손', 'end'], [100, 64, '100폰: 64손', 'end']]})
+  }],
   'earplug-nrr-rating': [{
     file: 'earplug-nrr-derating.svg', after: 3,
     alt: 'NRR 20, 25, 29, 33인 청력 보호구를 dBA 소음에서 쓸 때 OSHA 식으로 계산한 차음량. 7dB를 뺀 값은 13, 18, 22, 26dB이고 50% 보정하면 6.5, 9, 11, 13dB',
