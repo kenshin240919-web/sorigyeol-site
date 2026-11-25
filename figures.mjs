@@ -49,6 +49,12 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'sound-masking-speech-privacy': [{
+    file: 'sound-masking-levels.svg', after: 3,
+    alt: '사무실 배경 소리 기준값 막대그래프. 35dBA 미만은 대부분 알아채지 못함, 약 45dBA까지 대체로 받아들임, GSA 개방형 사무실 마스킹 권장 상한 48dBA, 50dBA를 넘으면 대체로 받아들이기 어려움',
+    caption: 'NRC Canadian Building Digest 139의 배경 소리 기준(35·45·50dBA)과 GSA ‘Sound Matters’의 개방형 사무실 마스킹 권장값(45~48dBA 중 상한 48)을 그대로 막대로 옮겼어요. 사람마다 받아들이는 정도는 달라요.',
+    svg: bars({title: '사무실 배경 소리 기준값 (dBA)', groups: [['거의 못 느낌(미만)', 35], ['대체로 받아들임', 45], ['GSA 마스킹 상한', 48], ['대체로 불만(초과)', 50]], labels: ['기준값'], max: 60})
+  }],
   'phon-sone-loudness': [{
     file: 'phon-sone-curve.svg', after: 2,
     alt: '크기 레벨(폰)에 따른 크기(손) 그래프. 40폰 1손, 50폰 2손, 60폰 4손, 80폰 16손, 100폰 64손으로 10폰마다 두 배씩 가파르게 올라감',
