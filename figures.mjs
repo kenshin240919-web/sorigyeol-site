@@ -49,6 +49,14 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'sudden-hearing-loss': [{
+    file: 'sudden-hearing-loss-criterion.svg', after: 1,
+    alt: '250Hz부터 8000Hz까지 청력 레벨을 그린 설명용 예시. 평소 청력선은 10dB HL로 평평하고, 갑자기 떨어진 뒤 선은 2000·4000·8000Hz에서 45dB HL로 내려가 세 주파수 모두 30dB 넘게 나빠졌다',
+    caption: '진단 기준(72시간 안, 연속된 세 주파수에서 30dB 이상)을 보여 주려고 그린 설명용 예시예요. 실제 사람의 검사 결과가 아니에요. 세로축 아래로 갈수록 큰 소리를 들려줘야 들린다는 뜻이고, 2000·4000·8000Hz 세 곳이 평소보다 35dB씩 나빠져 기준에 해당하는 모양이에요.',
+    svg: chart({title: '돌발성 난청 기준을 오디오그램에 그려 보면 (설명용 예시)', x: [250, 8000], xLog: true, y: [-80, 0], xTicks: [[250], [500], [1000, '1k'], [2000, '2k'], [4000, '4k'], [8000, '8k']], yTicks: [0, -10, -20, -30, -40, -50, -60, -70, -80].map(v => [v, -v]), xLabel: '주파수 (Hz)', yLabel: '청력 레벨 (dB HL, 아래로 갈수록 나쁨)',
+      series: [{label: '평소 청력(예시)', color: C.teal, pts: [[250, -10], [500, -10], [1000, -10], [2000, -10], [4000, -10], [8000, -10]]}, {label: '갑자기 떨어진 뒤(예시)', color: C.amber, dash: true, pts: [[250, -10], [500, -10], [1000, -15], [2000, -45], [4000, -45], [8000, -45]]}],
+      notes: [[2000, -45, '2k·4k·8k: 35dB씩 떨어짐', 'end']]})
+  }],
   'sound-masking-speech-privacy': [{
     file: 'sound-masking-levels.svg', after: 3,
     alt: '사무실 배경 소리 기준값 막대그래프. 35dBA 미만은 대부분 알아채지 못함, 약 45dBA까지 대체로 받아들임, GSA 개방형 사무실 마스킹 권장 상한 48dBA, 50dBA를 넘으면 대체로 받아들이기 어려움',
