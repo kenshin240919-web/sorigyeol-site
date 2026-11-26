@@ -49,6 +49,14 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'helmholtz-resonance-bottle': [{
+    file: 'helmholtz-bottle-volume.svg', after: 4,
+    alt: '병 안 공기 부피와 공명 주파수. 공기가 646cm³일 때 약 174~178Hz이고, 공기가 줄수록 주파수가 가파르게 올라 96cm³에서 계산 약 451Hz, 측정 496Hz',
+    caption: 'HyperPhysics 헬름홀츠 식 f = v ÷ (2π) × √(A ÷ (V × L))에 계산기 기본값(입구 3.63cm², 목 5.6cm, 소리 속도 345m/s)을 넣어 그린 계산선과, 같은 자료에 실린 20온스 플라스틱 콜라병 측정값(물을 부어 공기 부피를 줄이며 잰 값)을 함께 그렸어요. 공기가 적을 때 측정값이 계산보다 높게 나와요.',
+    svg: chart({title: '병 속 공기 부피가 줄면 음이 올라가요', x: [80, 660], y: [100, 520], xTicks: [100, 200, 300, 400, 500, 600].map(v => [v]), yTicks: [100, 200, 300, 400, 500], xLabel: '병 안 공기 부피 (cm³)', yLabel: '공명 주파수 (Hz)',
+      series: [{label: '계산 (HyperPhysics 식)', color: C.navy, pts: range(90, 660, 5).map(v => [v, 345 / (2 * Math.PI) * Math.sqrt(3.63e-4 / (v * 1e-6 * 0.055956))])}, {label: '측정 (콜라병 실험)', color: C.amber, dash: true, pts: [[646, 178], [596, 184], [546, 192], [496, 202], [446, 214], [396, 229], [346, 244], [296, 268], [246, 294], [196, 340], [171, 364], [146, 406], [121, 445], [96, 496]]}],
+      notes: [[646, 178, '빈 병: 178Hz', 'end'], [171, 364, '171cm³: 364Hz'], [96, 496, '96cm³: 496Hz']]})
+  }],
   'sudden-hearing-loss': [{
     file: 'sudden-hearing-loss-criterion.svg', after: 1,
     alt: '250Hz부터 8000Hz까지 청력 레벨을 그린 설명용 예시. 평소 청력선은 10dB HL로 평평하고, 갑자기 떨어진 뒤 선은 2000·4000·8000Hz에서 45dB HL로 내려가 세 주파수 모두 30dB 넘게 나빠졌다',
