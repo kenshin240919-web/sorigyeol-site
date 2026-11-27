@@ -49,6 +49,14 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'white-pink-brown-noise': [{
+    file: 'noise-color-spectrum.svg', after: 1,
+    alt: '1,000Hz를 0dB로 맞춘 1Hz당 상대 레벨. 백색소음은 평평하고, 핑크 노이즈는 20Hz에서 약 +17dB, 20kHz에서 약 −13dB, 브라운 노이즈는 20Hz에서 약 +34dB, 20kHz에서 약 −26dB',
+    caption: '계산 예시: 백색 0dB, 핑크 −3dB, 브라운 −6dB/옥타브(HyperPhysics·엠브리리들 항공대 교재의 기울기)로 1,000Hz를 0dB에 맞춰 그렸어요. 세로축은 1Hz당 레벨이에요.',
+    svg: chart({title: '잡음의 색: 1Hz당 레벨이 기우는 정도', x: [20, 20000], y: [-30, 40], xLog: true, xTicks: fTicks, yTicks: [-30, -20, -10, 0, 10, 20, 30, 40], xLabel: '주파수 (Hz, 로그 축)', yLabel: '1kHz 대비 상대 레벨 (dB)',
+      series: [{label: '백색소음 (0dB/옥타브)', color: C.muted, pts: [[20, 0], [20000, 0]]}, {label: '핑크 (−3dB/옥타브)', color: C.amber, pts: logRange(20, 20000).map(f => [f, -10 * Math.log10(f / 1000)])}, {label: '브라운 (−6dB/옥타브)', color: C.navy, pts: logRange(20, 20000).map(f => [f, -20 * Math.log10(f / 1000)])}],
+      notes: [[100, 10, '100Hz: 핑크 +10dB'], [100, 20, '100Hz: 브라운 +20dB'], [10000, -20, '10kHz: 브라운 −20dB', 'end']]})
+  }],
   'floor-impact-sound-post-inspection': [{
     file: 'floor-impact-sample-count.svg', after: 3,
     alt: '한 유형의 세대수가 49, 120, 250, 480세대일 때 2% 올림 규칙으로 계산한 검사 세대 수 1, 3, 5, 10을 보여 주는 막대그래프',
