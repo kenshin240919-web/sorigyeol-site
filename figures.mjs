@@ -49,6 +49,12 @@ function audioBands({w = 720, h = 460, title, bands, box}) {
 }
 
 export const figures = {
+  'floor-impact-sound-post-inspection': [{
+    file: 'floor-impact-sample-count.svg', after: 3,
+    alt: '한 유형의 세대수가 49, 120, 250, 480세대일 때 2% 올림 규칙으로 계산한 검사 세대 수 1, 3, 5, 10을 보여 주는 막대그래프',
+    caption: '계산 예시: 고시 제28조의 ‘유형별 세대수 × 2%, 소수점 올림’ 규칙에 세대수를 넣어 계산했어요.',
+    svg: bars({title: '유형별 세대수에 따른 검사 세대 수 (2%, 올림)', groups: [['49세대', 1], ['120세대', 3], ['250세대', 5], ['480세대', 10]], labels: ['검사 세대'], max: 12})
+  }],
   'helmholtz-resonance-bottle': [{
     file: 'helmholtz-bottle-volume.svg', after: 4,
     alt: '병 안 공기 부피와 공명 주파수. 공기가 646cm³일 때 약 174~178Hz이고, 공기가 줄수록 주파수가 가파르게 올라 96cm³에서 계산 약 451Hz, 측정 496Hz',
